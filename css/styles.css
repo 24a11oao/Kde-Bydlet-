@@ -1,0 +1,62 @@
+/* Additional styles for Kde Bydlet */
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #f1f1f1;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #888;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #555;
+}
+
+/* Listing cards hover effect */
+.listing-card {
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.listing-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+/* Slide-in animation for listings when user clicks "Vyhledávání" */
+.listings-animate .listing-card {
+  opacity: 0;
+  transform: translateY(18px);
+}
+
+.listings-animate .listing-card.show {
+  opacity: 1;
+  transform: translateY(0);
+  transition: transform 0.36s cubic-bezier(.2,.9,.2,1), opacity 0.36s ease;
+}
+
+/* Map container */
+#mapContainer {
+  background: #f8f9fa;
+}
+
+/* Support Chat Animation */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: scale(0.95) translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+.animate-fadeIn {
+  animation: fadeIn 0.2s ease-out;
+}

@@ -1,0 +1,12 @@
+/* styles.css */
+
+.photo-gallery {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+}
+
+.photo-gallery img {
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
