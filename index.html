@@ -1,0 +1,463 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Kde Bydlet - Najdi své studentské bydlení</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body class="bg-gray-100">
+  <!-- Header -->
+  <header class="bg-white shadow-md sticky top-0 z-40">
+    <div class="container mx-auto px-4 py-4 flex items-center justify-between">
+      <a href="#" class="flex items-center hover:opacity-80 transition-opacity">
+        <img src="assets/images/logo.png" class="h-16 w-16 mr-3">
+        <h1 class="text-2xl font-bold text-gray-800">Kde Bydlet</h1>
+      </a>
+      <nav>
+        <a href="#search" class="text-gray-600 hover:text-gray-800 mx-2">Vyhledávání</a>
+        <a href="#map" class="text-gray-600 hover:text-gray-800 mx-2">Mapa</a>
+        <a href="#calculator" class="text-gray-600 hover:text-gray-800 mx-2">Kalkulačka</a>
+      </nav>
+    </div>
+  </header>
+
+  <!-- Hero Sekce -->
+  <section class="bg-blue-600 text-white py-20">
+    <div class="container mx-auto px-4 text-center">
+      <h2 class="text-4xl font-bold mb-4">Najdi své ideální bydlení</h2>
+      <p class="text-xl mb-8">Prozkoumej nabídky bydlení po celé České republice. Filtruj podle města, ceny a dalších kritérií.</p>
+      <p class="text-lg mb-8 text-gray-100">MY jsem Kde Bydlet a s námi najdeš ideální bydlení pro své potřeby!</p>
+      <a href="#search" class="bg-white text-blue-600 px-6 py-3 rounded-lg font-semibold hover:bg-gray-100">Začít hledat</a>
+    </div>
+  </section>
+
+  <!-- Vyhledávání -->
+  <section id="search" class="py-16">
+    <div class="container mx-auto px-4">
+      <h3 class="text-3xl font-bold text-center mb-8">Vyhledávání bydlení</h3>
+      <div class="mb-8">
+        <input type="text" id="searchInput" placeholder="Hledej podle města nebo názvu..." class="w-full px-4 py-2 border border-gray-300 rounded-lg">
+      </div>
+      <div id="listings" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <!-- Příklad nabídky -->
+        <div class="bg-white p-4 rounded-lg shadow-md">
+          <img src="assets/images/nove_info.jpg" alt="Nové místo" class="w-full h-40 object-cover rounded-lg mb-4">
+          <h4 class="text-xl font-semibold mb-2">Nové místo</h4>
+          <p class="text-gray-700 mb-2">Město</p>
+          <p class="text-gray-900 font-bold mb-4">7,500 Kč</p>
+          <a href="#" class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700">Zobrazit nabídku</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Mapa sekce -->
+  <section id="map" class="py-16 bg-white">
+    <div class="container mx-auto px-4">
+      <h3 class="text-3xl font-bold text-center mb-8">Mapa nabídek</h3>
+      <div id="mapContainer" class="h-96 w-full border border-gray-300 rounded-lg"></div>
+    </div>
+  </section>
+
+  <!-- Kalkulačka rozpočtu -->
+  <section id="calculator" class="py-16">
+    <div class="container mx-auto px-4">
+      <h3 class="text-3xl font-bold text-center mb-8">Kalkulačka rozpočtu</h3>
+      <div class="max-w-md mx-auto bg-white p-6 rounded-lg shadow-md">
+        <div class="mb-4">
+          <label class="block text-gray-700 mb-2">Měsíční příjem (Kč)</label>
+          <input type="number" id="income" class="w-full px-3 py-2 border border-gray-300 rounded-lg">
+        </div>
+        <div class="mb-4">
+          <label class="block text-gray-700 mb-2">Nájem (Kč)</label>
+          <input type="number" id="rent" class="w-full px-3 py-2 border border-gray-300 rounded-lg">
+        </div>
+        <div class="mb-4">
+          <label class="block text-gray-700 mb-2">Ostatní náklady (Kč)</label>
+          <input type="number" id="otherCosts" class="w-full px-3 py-2 border border-gray-300 rounded-lg">
+        </div>
+        <button id="calculateBtn" class="w-full bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700">Spočítat</button>
+        <div id="result" class="mt-4 text-center"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Statistics Section -->
+  <section class="py-16 bg-gradient-to-r from-blue-600 to-blue-700 text-white">
+    <div class="container mx-auto px-4">
+      <h3 class="text-3xl font-bold text-center mb-12">Naše Čísla</h3>
+      <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
+        <div class="text-center">
+          <div class="text-5xl font-bold mb-2">4</div>
+          <p class="text-lg">Dostupných nabídek</p>
+          <p class="text-sm text-blue-100 mt-1">Přidáváme nové každý týden</p>
+        </div>
+        <div class="text-center">
+          <div class="text-5xl font-bold mb-2">4</div>
+          <p class="text-lg">Měst v ČR</p>
+          <p class="text-sm text-blue-100 mt-1">Praha, Brno, Ostrava, Plzeň</p>
+        </div>
+        <div class="text-center">
+          <div class="text-5xl font-bold mb-2 opacity-60">?</div>
+          <p class="text-lg opacity-60">Spokojených uživatelů</p>
+          <p class="text-sm text-blue-100 mt-1 opacity-60">Brzy k dispozici</p>
+        </div>
+        <div class="text-center">
+          <div class="text-5xl font-bold mb-2 opacity-60">?</div>
+          <p class="text-lg opacity-60">Pronajatých bytů</p>
+          <p class="text-sm text-blue-100 mt-1 opacity-60">Brzy k dispozici</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Testimonials Section -->
+  <section class="py-16 bg-gray-50">
+    <div class="container mx-auto px-4">
+      <h3 class="text-3xl font-bold text-center mb-12">Co Říkají Naši Uživatelé</h3>
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+        <!-- Testimonial 1 -->
+        <div class="bg-white p-6 rounded-lg shadow-md">
+          <div class="flex items-center mb-4">
+            <div class="w-12 h-12 bg-blue-600 rounded-full flex items-center justify-center text-white font-bold mr-4">MP</div>
+            <div>
+              <h4 class="font-semibold text-gray-800">Matěj Procházka</h4>
+              <p class="text-sm text-gray-600">Praha</p>
+            </div>
+          </div>
+          <div class="flex text-yellow-400 mb-3">⭐⭐⭐⭐⭐</div>
+          <p class="text-gray-700 italic">"Aplikace je úžasná! Zabrala mi pět minut najít si ideální pokoj v Praze. Doporučuji všem svým kamarádům!"</p>
+        </div>
+
+        <!-- Testimonial 2 -->
+        <div class="bg-white p-6 rounded-lg shadow-md">
+          <div class="flex items-center mb-4">
+            <div class="w-12 h-12 bg-blue-600 rounded-full flex items-center justify-center text-white font-bold mr-4">LS</div>
+            <div>
+              <h4 class="font-semibold text-gray-800">Lucia Svobodová</h4>
+              <p class="text-sm text-gray-600">Brno</p>
+            </div>
+          </div>
+          <div class="flex text-yellow-400 mb-3">⭐⭐⭐⭐⭐</div>
+          <p class="text-gray-700 italic">"Nejlepší app pro hledání bydlení! Kalkulačka mi pomohla pochopit můj rozpočet. Děkuji!"</p>
+        </div>
+
+        <!-- Testimonial 3 -->
+        <div class="bg-white p-6 rounded-lg shadow-md">
+          <div class="flex items-center mb-4">
+            <div class="w-12 h-12 bg-blue-600 rounded-full flex items-center justify-center text-white font-bold mr-4">JK</div>
+            <div>
+              <h4 class="font-semibold text-gray-800">Jan Kučera</h4>
+              <p class="text-sm text-gray-600">Ostrava</p>
+            </div>
+          </div>
+          <div class="flex text-yellow-400 mb-3">⭐⭐⭐⭐⭐</div>
+          <p class="text-gray-700 italic">"Mapa je skvělá pro orientaci v jednotlivých městech. Rozhodně si vezmu tento web se sebou při hledání!"</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FAQ Section -->
+  <section id="faq" class="py-16 bg-gray-50">
+    <div class="container mx-auto px-4">
+      <h3 class="text-3xl font-bold text-center mb-12">Často Kladené Otázky (FAQ)</h3>
+      <div class="max-w-2xl mx-auto space-y-4">
+        <!-- FAQ Item 1 -->
+        <div class="bg-white rounded-lg shadow-md overflow-hidden">
+          <button class="faqToggle w-full px-6 py-4 flex items-center justify-between hover:bg-gray-50 transition" onclick="toggleFAQ(this)">
+            <span class="text-lg font-semibold text-gray-800">Jak funguje kalkulačka rozpočtu?</span>
+            <span class="text-2xl text-blue-600">+</span>
+          </button>
+          <div class="faqContent hidden px-6 py-4 border-t border-gray-200 bg-gray-50">
+            <p class="text-gray-700">Zadej svůj měsíční příjem, cenu nájmu a další náklady. Kalkulačka spočítá procento příjmu, které jde na nájem, a poskytne jednoduché doporučení. Obecně doporučujeme udržet nájem do 40% měsíčního příjmu.</p>
+          </div>
+        </div>
+
+        <!-- FAQ Item 2 -->
+        <div class="bg-white rounded-lg shadow-md overflow-hidden">
+          <button class="faqToggle w-full px-6 py-4 flex items-center justify-between hover:bg-gray-50 transition" onclick="toggleFAQ(this)">
+            <span class="text-lg font-semibold text-gray-800">Jak mohu filtrovat nabídky?</span>
+            <span class="text-2xl text-blue-600">+</span>
+          </button>
+          <div class="faqContent hidden px-6 py-4 border-t border-gray-200 bg-gray-50">
+            <p class="text-gray-700">Použij vyhledávací pole v sekci 'Vyhledávání' a napiš město nebo část názvu nabídky. Výsledky se aktualizují okamžitě. Brzy přidáme více filtrů (cena, počet pokojů, typ bytu).</p>
+          </div>
+        </div>
+
+        <!-- FAQ Item 3 -->
+        <div class="bg-white rounded-lg shadow-md overflow-hidden">
+          <button class="faqToggle w-full px-6 py-4 flex items-center justify-between hover:bg-gray-50 transition" onclick="toggleFAQ(this)">
+            <span class="text-lg font-semibold text-gray-800">Jsou zde všechny nabídky z ČR?</span>
+            <span class="text-2xl text-blue-600">+</span>
+          </button>
+          <div class="faqContent hidden px-6 py-4 border-t border-gray-200 bg-gray-50">
+            <p class="text-gray-700">Aktuálně máme nabídky ve 4 městech: Praha, Brno, Ostrava a Plzeň. Průběžně pracujeme na rozšíření portfolia a plánujeme přidávat nová města podle poptávky.</p>
+          </div>
+        </div>
+
+        <!-- FAQ Item 4 -->
+        <div class="bg-white rounded-lg shadow-md overflow-hidden">
+          <button class="faqToggle w-full px-6 py-4 flex items-center justify-between hover:bg-gray-50 transition" onclick="toggleFAQ(this)">
+            <span class="text-lg font-semibold text-gray-800">Mohu se obrátit na podporu?</span>
+            <span class="text-2xl text-blue-600">+</span>
+          </button>
+          <div class="faqContent hidden px-6 py-4 border-t border-gray-200 bg-gray-50">
+            <p class="text-gray-700">Ano — klikni na tlačítko "Podpora" v pravém dolním rohu stránky (modré kolo). Otevře se chat, kde můžeš vybrat kategorii a spojit se s operátorem.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Policies Modal -->
+  <div id="policiesModal" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+    <div class="bg-white rounded-lg shadow-2xl max-w-2xl w-full mx-4 max-h-96 overflow-y-auto">
+      <div class="p-6">
+        <div class="flex justify-between items-center mb-4">
+          <h2 id="modalTitle" class="text-2xl font-bold text-gray-800"></h2>
+          <button onclick="closePoliciesModal()" class="text-gray-600 hover:text-gray-800 text-2xl">✕</button>
+        </div>
+        <div id="modalContent" class="text-gray-700 text-sm space-y-3"></div>
+      </div>
+    </div>
+  </div>
+
+  </section>
+
+  <!-- Footer -->
+  <footer class="bg-gray-800 text-gray-300 py-12">
+    <div class="container mx-auto px-4">
+      <div class="grid grid-cols-1 md:grid-cols-4 gap-8 mb-8">
+        <!-- Brand -->
+        <div>
+          <div class="flex items-center mb-4">
+            <img src="assets/images/logo.png" class="h-10 w-10 mr-2">
+            <h3 class="text-xl font-bold text-white">Kde Bydlet</h3>
+          </div>
+          <p class="text-sm">Aplikace pro snadné hledání studentského bydlení v České republice.</p>
+        </div>
+
+        <!-- Quick Links -->
+        <div>
+          <h4 class="font-semibold text-white mb-4">Rychlé Odkazy</h4>
+          <ul class="space-y-2 text-sm">
+              <li><a href="#search" class="hover:text-white transition">Vyhledávání</a></li>
+              <li><a href="#map" class="hover:text-white transition">Mapa</a></li>
+              <li><a href="#calculator" class="hover:text-white transition">Kalkulačka</a></li>
+              <li><a href="#" class="hover:text-white transition">O nás</a></li>
+          </ul>
+        </div>
+
+        <!-- Support -->
+        <div>
+          <h4 class="font-semibold text-white mb-4">Podpora</h4>
+          <ul class="space-y-2 text-sm">
+            <li><a href="#faq" class="hover:text-white transition">FAQ</a></li>
+            <li><a href="#" onclick="openPoliciesModal('Kontakt');return false" class="hover:text-white transition">Kontakt</a></li>
+            <li><a href="#" onclick="openPoliciesModal('Podmínky Použití');return false" class="hover:text-white transition">Podmínky Použití</a></li>
+            <li><a href="#" onclick="openPoliciesModal('Ochrana Dat');return false" class="hover:text-white transition">Ochrana Dat</a></li>
+          </ul>
+        </div>
+
+        <!-- Contact -->
+        <div>
+          <h4 class="font-semibold text-white mb-4">Kontakt</h4>
+          <div class="space-y-3 text-sm">
+            <div>
+              <p class="text-gray-400">Telefon</p>
+              <a href="tel:+420265273208" class="hover:text-white transition font-semibold">+420 265 273 208</a>
+            </div>
+            <div>
+              <p class="text-gray-400">Email</p>
+              <a href="mailto:MyRoof@gmail.com" class="hover:text-white transition font-semibold">MyRoof@gmail.com</a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Divider -->
+      <div class="border-t border-gray-700 pt-8">
+        <div class="flex flex-col md:flex-row justify-between items-center">
+          <p class="text-sm text-gray-400">© 2026 Kde Bydlet. Všechna práva vyhrazena.</p>
+          <div class="flex gap-6 mt-4 md:mt-0">
+            <a href="https://www.facebook.com/oa.karasova.ostrava?locale=cs_CZ" target="_blank" class="text-gray-400 hover:text-white transition">Facebook</a>
+            <a href="https://www.instagram.com/_myroof_/" target="_blank" class="text-gray-400 hover:text-white transition">Instagram</a>
+            <a href="#" onclick="copyEmailToClipboard(event)" class="text-gray-400 hover:text-white transition cursor-pointer">Email</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Support Chat Widget -->
+  <div id="supportWidget" class="fixed bottom-6 right-6 z-40 font-sans">
+    <!-- Floating Button -->
+    <button id="supportBtn" class="bg-blue-600 hover:bg-blue-700 text-white rounded-full w-14 h-14 flex items-center justify-center shadow-lg transition-all duration-300 hover:scale-110">
+      <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18.364 5.636l-3.536 3.536m0 5.656l3.536 3.536M9.172 9.172L5.636 5.636m3.536 9.192l-3.536 3.536M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-5 0a4 4 0 11-8 0 4 4 0 018 0z" />
+      </svg>
+    </button>
+
+    <!-- Chat Window -->
+    <div id="chatWindow" class="hidden absolute bottom-20 right-0 w-96 bg-white rounded-lg shadow-2xl flex flex-col h-96 animate-fadeIn">
+      <!-- Header -->
+      <div class="bg-blue-600 text-white p-4 rounded-t-lg flex items-center justify-between">
+        <div class="flex items-center">
+          <img src="assets/images/logo.png" class="h-8 w-8 mr-2 rounded-full bg-white p-1">
+          <div>
+            <h3 class="font-bold">Kde Bydlet Support</h3>
+            <p class="text-xs text-blue-100">Jsme online 24/7</p>
+          </div>
+        </div>
+        <button id="closeBtn" class="text-white hover:bg-blue-700 px-2 py-1 rounded transition">✕</button>
+      </div>
+
+      <!-- Chat Categories (initial view) -->
+      <div id="categoriesView" class="flex-1 overflow-y-auto p-4">
+        <p class="text-gray-700 text-sm mb-4 font-semibold">Jak ti můžeme pomoci?</p>
+        <button class="categoryBtn w-full text-left bg-gray-100 hover:bg-blue-50 p-3 rounded-lg mb-2 transition border border-gray-200 hover:border-blue-400">
+          <p class="font-semibold text-sm">📋 Pomoc se smlouvou</p>
+          <p class="text-xs text-gray-600">Otázky ohledně nájemní smlouvy</p>
+        </button>
+        <button class="categoryBtn w-full text-left bg-gray-100 hover:bg-blue-50 p-3 rounded-lg mb-2 transition border border-gray-200 hover:border-blue-400">
+          <p class="font-semibold text-sm">🧮 Pomoc s kalkulací</p>
+          <p class="text-xs text-gray-600">Help s rozpočtovací kalkulačkou</p>
+        </button>
+        <button class="categoryBtn w-full text-left bg-gray-100 hover:bg-blue-50 p-3 rounded-lg mb-2 transition border border-gray-200 hover:border-blue-400">
+          <p class="font-semibold text-sm">🏠 Problém v nabídce</p>
+          <p class="text-xs text-gray-600">Nahlášení chyby v nabídce</p>
+        </button>
+        <button class="categoryBtn w-full text-left bg-gray-100 hover:bg-blue-50 p-3 rounded-lg mb-2 transition border border-gray-200 hover:border-blue-400">
+          <p class="font-semibold text-sm">🗺️ Pomoc s mapou</p>
+          <p class="text-xs text-gray-600">Otázky k mapě a filtrování</p>
+        </button>
+        <button class="categoryBtn w-full text-left bg-gray-100 hover:bg-blue-50 p-3 rounded-lg mb-2 transition border border-gray-200 hover:border-blue-400">
+          <p class="font-semibold text-sm">❓ Ostatní</p>
+          <p class="text-xs text-gray-600">Cokoli jiného co potřebuješ</p>
+        </button>
+      </div>
+
+      <!-- Chat Messages View (hidden initially) -->
+      <div id="chatView" class="hidden flex flex-col flex-1 h-full">
+        <div id="chatMessages" class="flex-1 overflow-y-auto p-4 bg-gray-50 space-y-3">
+          <!-- Messages will be added here -->
+          <div class="flex justify-start">
+            <div class="bg-blue-600 text-white px-4 py-2 rounded-lg rounded-tl-none max-w-xs">
+              <p class="text-sm">Ahoj! Jak ti dnes můžeme pomoci? 😊</p>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Input -->
+        <div class="border-t border-gray-200 p-4 bg-white rounded-b-lg">
+          <button id="backBtn" class="text-blue-600 text-sm mb-2 hover:underline">← Zpět na kategorie</button>
+          <div class="flex gap-2">
+            <input type="text" id="messageInput" placeholder="Napiš zprávu..." class="flex-1 border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm">
+            <button id="sendBtn" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg transition font-semibold">Poslat</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="js/api.js"></script>
+  <script src="js/map.js"></script>
+  <script src="js/search.js"></script>
+  <script src="js/tools.js"></script>
+  <script src="js/support.js"></script>
+  <script>
+    function copyEmailToClipboard(event) {
+      event.preventDefault();
+      const email = 'MyRoof@gmail.com';
+      navigator.clipboard.writeText(email).then(() => {
+        showNotification('✓ Email zkopírován do schránky!');
+      }).catch(err => {
+        console.error('Chyba při kopírování:', err);
+      });
+    }
+
+    function showNotification(message) {
+      // Create notification element
+      const notification = document.createElement('div');
+      notification.className = 'fixed top-6 right-6 bg-green-500 text-white px-6 py-3 rounded-lg shadow-lg z-50 animate-fadeIn';
+      notification.textContent = message;
+      
+      document.body.appendChild(notification);
+      
+      // Remove after 3 seconds
+      setTimeout(() => {
+        notification.style.opacity = '0';
+        notification.style.transition = 'opacity 0.3s ease-out';
+        setTimeout(() => document.body.removeChild(notification), 300);
+      }, 3000);
+    }
+
+    // Toggle FAQ accordion: show/hide answer and update icon
+    function toggleFAQ(button) {
+      const content = button.nextElementSibling;
+      const icon = button.querySelector('span.text-2xl');
+
+      // Close other open FAQ items
+      document.querySelectorAll('.faqContent').forEach(c => {
+        if (c !== content) {
+          c.classList.add('hidden');
+          const prevBtn = c.previousElementSibling;
+          if (prevBtn) {
+            const prevIcon = prevBtn.querySelector('span.text-2xl');
+            if (prevIcon) prevIcon.textContent = '+';
+          }
+        }
+      });
+
+      const isHidden = content.classList.contains('hidden');
+      if (isHidden) {
+        content.classList.remove('hidden');
+        if (icon) icon.textContent = '−';
+        // Smoothly bring the opened answer into view
+        content.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      } else {
+        content.classList.add('hidden');
+        if (icon) icon.textContent = '+';
+      }
+    }
+
+    // Policies/modal content and controls
+    const policiesData = {
+      'Kontakt': `
+        <p><strong>Telefon:</strong> <a href="tel:+420265273208" class="text-blue-600">+420 265 273 208</a></p>
+        <p><strong>Email:</strong> <a href="mailto:MyRoof@gmail.com" class="text-blue-600">MyRoof@gmail.com</a></p>
+        <p>Pro rychlou pomoc použij také tlačítko <em>Podpora</em> v pravém dolním rohu stránky.</p>
+      `,
+      'Podmínky Použití': `
+        <p>Tyto Podmínky používání popisují pravidla pro přístup a používání služby Kde Bydlet.</p>
+        <p>V krátkosti: služba je poskytována 'tak jak je' a uživatelé jsou zodpovědní za komunikaci s inzerenty.</p>
+      `,
+      'Ochrana Dat': `
+        <p>Respektujeme vaše soukromí. Shromažďujeme pouze nezbytné údaje k provozu služby.</p>
+        <p>Pro podrobnosti kontaktujte naši podporu nebo pošlete email na MyRoof@gmail.com.</p>
+      `
+    };
+
+    function openPoliciesModal(title) {
+      const modal = document.getElementById('policiesModal');
+      const titleEl = document.getElementById('modalTitle');
+      const contentEl = document.getElementById('modalContent');
+      titleEl.textContent = title;
+      contentEl.innerHTML = policiesData[title] || '<p>Informace nejsou k dispozici.</p>';
+      modal.classList.remove('hidden');
+      // focus for accessibility
+      modal.querySelector('button')?.focus();
+    }
+
+    function closePoliciesModal() {
+      const modal = document.getElementById('policiesModal');
+      modal.classList.add('hidden');
+    }
+  </script>
+</body>
+</html>
